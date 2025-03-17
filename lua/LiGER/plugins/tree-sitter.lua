@@ -14,6 +14,16 @@ return {
 			highlight = {
 				enable = true,
 			},
+			-- ...
+			inject = {
+				-- Highlight JSDoc comments
+				jsdoc = {
+					enable = true,
+					query = [[
+        (jsdoc_comment) @jsdoc
+      ]],
+				},
+			},
 			-- enable indentation
 			indent = { enable = true },
 			-- enable autotagging (w/ nvim-ts-autotag plugin)
@@ -24,6 +34,7 @@ return {
 			ensure_installed = {
 				"json",
 				"javascript",
+				"jsdoc",
 				"typescript",
 				"tsx",
 				"yaml",
