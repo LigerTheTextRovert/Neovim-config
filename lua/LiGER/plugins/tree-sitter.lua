@@ -53,6 +53,7 @@ return {
 				"java",
 				"query",
 				"vimdoc",
+				"python",
 				"c",
 			},
 			-- incremental_selection = {
