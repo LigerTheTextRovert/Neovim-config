@@ -21,5 +21,3 @@ vim.keymap.set("n", "N", "Nzzzv")
 
 -- Oil nvim keymap
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-
-keymap.set("n", "<leader>w", ":w<CR>") -- split window horizontally

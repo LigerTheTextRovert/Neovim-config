@@ -36,6 +36,28 @@ Custom keybindings have been set up to enhance the editing workflow.
 | `<leader>se` | Make splits equal size    |
 | `<leader>sx` | Close current split       |
 
+- ### Keymaps for easy navigation though file
+
+| Keybind          | Description                                             |
+| ---------------- | ------------------------------------------------------- |
+| `J` (visual)     | Move selected lines down while maintaining indentation. |
+| `K` (visual)     | Move selected lines up while maintaining indentation.   |
+| `J` (normal)     | Join lines without moving the cursor position.          |
+| `n` (normal)     | Jump to next search match and center the cursor.        |
+| `N` (normal)     | Jump to previous search match and center the cursor.    |
+| `<C-d>` (normal) | Scroll half-page down and center the cursor.            |
+| `<C-u>` (normal) | Scroll half-page up and center the cursor.              |
+
+- ### file-tree keymaps
+
+| Keybind      | Description                          |
+| ------------ | ------------------------------------ |
+| `n` (normal) | Opens up the oil-nvim                |
+| `<leader>ee` | Toggle file explorer                 |
+| `<leader>ef` | Toggle file explorer on current file |
+| `<leader>ec` | Collapse file explorer               |
+| `<leader>er` | Refresh file explorer                |
+
 ## Plugins
 
 A variety of plugins are integrated to extend Neovim's functionality.

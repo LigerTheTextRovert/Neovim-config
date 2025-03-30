@@ -78,7 +78,7 @@ return {
 	config = function()
 		local c = require("vscode.colors").get_colors()
 		require("vscode").setup({
-			transparent = false,
+			transparent = true,
 			disable_nvimtree_bg = false,
 
 			group_overrides = {
@@ -133,7 +133,7 @@ return {
 -- 			styles = {
 -- 				bold = false,
 -- 				italic = false,
--- 				transparency = false,
+-- 				transparency = true,
 -- 			},
 --
 -- 			groups = {
