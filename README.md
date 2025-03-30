@@ -17,6 +17,25 @@ The configuration includes support for multiple programming languages, ensuring 
 
 Custom keybindings have been set up to enhance the editing workflow.
 
+- ### Telescope keybindings
+
+| Keybind      | Description                     |
+| ------------ | ------------------------------- |
+| `<leader>ff` | Fuzzy find files in cwd         |
+| `<leader>fr` | Fuzzy find recent files         |
+| `<leader>fs` | Find string in cwd              |
+| `<leader>fc` | Find string under cursor in cwd |
+| `<leader>fb` | Find buffers                    |
+
+- ### Keymaps for spliting windows
+
+| Keybind      | Description               |
+| ------------ | ------------------------- |
+| `<leader>sv` | Split window vertically   |
+| `<leader>sh` | Split window horizontally |
+| `<leader>se` | Make splits equal size    |
+| `<leader>sx` | Close current split       |
+
 ## Plugins
 
 A variety of plugins are integrated to extend Neovim's functionality.
