@@ -1,161 +1,85 @@
--- return {
---
--- 	"catppuccin/nvim",
--- 	name = "catppuccin",
--- 	priority = 1000,
--- 	config = function()
--- 		require("catppuccin").setup({
--- 			flavour = "auto", -- latte, frappe, macchiato, mocha
--- 			background = { -- :h background
--- 				light = "latte",
--- 				dark = "mocha",
--- 			},
--- 			transparent_background = false, -- disables setting the background color.
--- 			show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
--- 			term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
--- 			dim_inactive = {
--- 				enabled = false, -- dims the background color of inactive window
--- 				shade = "dark",
--- 				percentage = 0.15, -- percentage of the shade to apply to the inactive window
--- 			},
--- 			no_italic = false, -- Force no italic
--- 			no_bold = false, -- Force no bold
--- 			no_underline = false, -- Force no underline
--- 			styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
--- 				comments = { "italic" }, -- Change the style of comments
--- 				conditionals = { "italic" },
--- 				loops = {},
--- 				functions = {},
--- 				keywords = {},
--- 				strings = {},
--- 				variables = {},
--- 				numbers = {},
--- 				booleans = {},
--- 				properties = {},
--- 				types = {},
--- 				operators = {},
--- 				-- miscs = {}, -- Uncomment to turn off hard-coded styles
--- 			},
--- 			color_overrides = {},
--- 			custom_highlights = {},
--- 			default_integrations = true,
--- 			integrations = {
--- 				cmp = true,
--- 				gitsigns = true,
--- 				nvimtree = true,
--- 				treesitter = true,
--- 				notify = false,
--- 				mini = {
--- 					enabled = true,
--- 					indentscope_color = "",
--- 				},
--- 				-- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
--- 			},
--- 		})
---
--- 		-- setup must be called before loading
--- 		vim.cmd.colorscheme("catppuccin")
--- 	end,
--- }
-
--- return {
--- 	"projekt0n/github-nvim-theme",
--- 	name = "github-theme",
--- 	lazy = false, -- make sure we load this during startup if it is your main colorscheme
--- 	priority = 1000, -- make sure to load this before all the other start plugins
--- 	config = function()
--- 		require("github-theme").setup({
--- 			-- ...
--- 		})
---
--- 		vim.cmd("colorscheme github_dark_dimmed")
--- 	end,
--- }
---
---
-
--- return {
--- 	"Mofiqul/vscode.nvim",
--- 	priority = 1000,
--- 	config = function()
--- 		local c = require("vscode.colors").get_colors()
--- 		require("vscode").setup({
--- 			transparent = true,
--- 			disable_nvimtree_bg = false,
---
--- 			group_overrides = {
--- 				-- this supports the same val table as vim.api.nvim_set_hl
--- 				-- use colors from this colorscheme by requiring vscode.colors!
--- 				Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
--- 				-- CSS
--- 				cssBraces = { fg = c.vscPink, bg = "NONE" },
--- 				cssInclude = { fg = c.vscPink, bg = "NONE" },
--- 				cssTagName = { fg = c.vscYellowOrange, bg = "NONE" },
--- 				cssClassName = { fg = c.vscYellowOrange, bg = "NONE" },
--- 				cssPseudoClass = { fg = c.vscYellowOrange, bg = "NONE" },
--- 				cssPseudoClassId = { fg = c.vscYellowOrange, bg = "NONE" },
--- 				cssPseudoClassLang = { fg = c.vscYellowOrange, bg = "NONE" },
--- 				cssIdentifier = { fg = c.vscYellowOrange, bg = "NONE" },
--- 				cssProp = { fg = c.vscLightBlue, bg = "NONE" },
--- 				cssDefinition = { fg = c.vscLightBlue, bg = "NONE" },
--- 				cssAttr = { fg = c.vscOrange, bg = "NONE" },
--- 				cssAttrRegion = { fg = c.vscOrange, bg = "NONE" },
--- 				cssColor = { fg = c.vscOrange, bg = "NONE" },
--- 				cssFunction = { fg = c.vscOrange, bg = "NONE" },
--- 				cssFunctionName = { fg = c.vscOrange, bg = "NONE" },
--- 				cssVendor = { fg = c.vscOrange, bg = "NONE" },
--- 				cssValueNumber = { fg = c.vscOrange, bg = "NONE" },
--- 				cssValueLength = { fg = c.vscOrange, bg = "NONE" },
--- 				cssUnitDecorators = { fg = c.vscOrange, bg = "NONE" },
--- 				cssStyle = { fg = c.vscLightBlue, bg = "NONE" },
--- 				cssImportant = { fg = c.vscBlue, bg = "NONE" },
--- 			},
--- 		})
---
--- 		vim.cmd([[colorscheme vscode]])
--- 	end,
--- }
-
 return {
-	"webhooked/kanso.nvim",
-	lazy = false,
+	"Mofiqul/vscode.nvim",
 	priority = 1000,
 	config = function()
-		return {
-			"webhooked/kanso.nvim",
-			lazy = false,
-			priority = 1000,
-			-- Default options:
-			require("kanso").setup({
-				compile = false, -- enable compiling the colorscheme
-				undercurl = true, -- enable undercurls
-				commentStyle = { italic = true },
-				functionStyle = {},
-				keywordStyle = { italic = false },
-				statementStyle = {},
-				typeStyle = {},
-				transparent = false, -- do not set background color
-				dimInactive = false, -- dim inactive window `:h hl-NormalNC`
-				terminalColors = true, -- define vim.g.terminal_color_{0,17}
-				colors = { -- add/modify theme and palette colors
-					palette = {},
-					theme = { zen = {}, pearl = {}, ink = {}, all = {} },
-				},
-				overrides = function(colors) -- add/modify highlights
-					return {}
-				end,
-				theme = "ink", -- Load "zen" theme
-				background = { -- map the value of 'background' option to a theme
-					dark = "ink", -- try "ink" !
-					light = "pearl",
-				},
-			}),
+		local c = require("vscode.colors").get_colors()
+		require("vscode").setup({
+			transparent = true,
+			disable_nvimtree_bg = false,
 
-			-- setup must be called before loading
-			vim.cmd("colorscheme kanso"),
-		}
+			group_overrides = {
+				-- this supports the same val table as vim.api.nvim_set_hl
+				-- use colors from this colorscheme by requiring vscode.colors!
+				Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
+				-- CSS
+				cssBraces = { fg = c.vscPink, bg = "NONE" },
+				cssInclude = { fg = c.vscPink, bg = "NONE" },
+				cssTagName = { fg = c.vscYellowOrange, bg = "NONE" },
+				cssClassName = { fg = c.vscYellowOrange, bg = "NONE" },
+				cssPseudoClass = { fg = c.vscYellowOrange, bg = "NONE" },
+				cssPseudoClassId = { fg = c.vscYellowOrange, bg = "NONE" },
+				cssPseudoClassLang = { fg = c.vscYellowOrange, bg = "NONE" },
+				cssIdentifier = { fg = c.vscYellowOrange, bg = "NONE" },
+				cssProp = { fg = c.vscLightBlue, bg = "NONE" },
+				cssDefinition = { fg = c.vscLightBlue, bg = "NONE" },
+				cssAttr = { fg = c.vscOrange, bg = "NONE" },
+				cssAttrRegion = { fg = c.vscOrange, bg = "NONE" },
+				cssColor = { fg = c.vscOrange, bg = "NONE" },
+				cssFunction = { fg = c.vscOrange, bg = "NONE" },
+				cssFunctionName = { fg = c.vscOrange, bg = "NONE" },
+				cssVendor = { fg = c.vscOrange, bg = "NONE" },
+				cssValueNumber = { fg = c.vscOrange, bg = "NONE" },
+				cssValueLength = { fg = c.vscOrange, bg = "NONE" },
+				cssUnitDecorators = { fg = c.vscOrange, bg = "NONE" },
+				cssStyle = { fg = c.vscLightBlue, bg = "NONE" },
+				cssImportant = { fg = c.vscBlue, bg = "NONE" },
+			},
+		})
+
+		vim.cmd([[colorscheme vscode]])
 	end,
 }
+
+-- return {
+-- 	"webhooked/kanso.nvim",
+-- 	lazy = false,
+-- 	priority = 1000,
+-- 	config = function()
+-- 		return {
+-- 			"webhooked/kanso.nvim",
+-- 			lazy = false,
+-- 			priority = 1000,
+-- 			-- Default options:
+-- 			require("kanso").setup({
+-- 				compile = false, -- enable compiling the colorscheme
+-- 				undercurl = true, -- enable undercurls
+-- 				commentStyle = { italic = true },
+-- 				functionStyle = {},
+-- 				keywordStyle = { italic = false },
+-- 				statementStyle = {},
+-- 				typeStyle = {},
+-- 				transparent = false, -- do not set background color
+-- 				dimInactive = false, -- dim inactive window `:h hl-NormalNC`
+-- 				terminalColors = true, -- define vim.g.terminal_color_{0,17}
+-- 				colors = { -- add/modify theme and palette colors
+-- 					palette = {},
+-- 					theme = { zen = {}, pearl = {}, ink = {}, all = {} },
+-- 				},
+-- 				overrides = function(colors) -- add/modify highlights
+-- 					return {}
+-- 				end,
+-- 				theme = "ink", -- Load "zen" theme
+-- 				background = { -- map the value of 'background' option to a theme
+-- 					dark = "ink", -- try "ink" !
+-- 					light = "pearl",
+-- 				},
+-- 			}),
+--
+-- 			-- setup must be called before loading
+-- 			vim.cmd("colorscheme kanso"),
+-- 		}
+-- 	end,
+-- }
 
 -- return {
 -- 	"rose-pine/neovim",
