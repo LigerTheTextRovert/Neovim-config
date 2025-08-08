@@ -15,6 +15,7 @@ return {
     -- Global diagnostic settings
     vim.diagnostic.config({
       virtual_text = {
+        source = true, -- shows [eslint], [tsserver], etc.
         spacing = 2,
         prefix = "●",
       },
@@ -57,8 +58,6 @@ return {
         keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
         keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
         keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
-        keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-        keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
         keymap.set("n", "K", vim.lsp.buf.hover, opts)
         keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
       end,
@@ -102,10 +101,72 @@ return {
         nvim_lsp["cssls"].setup({ on_attach = on_attach, capabilities = capabilities })
       end,
       ["tailwindcss"] = function()
-        nvim_lsp["tailwindcss"].setup({ on_attach = on_attach, capabilities = capabilities })
+        local util = require("lspconfig").util
+        local capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
+        nvim_lsp["tailwindcss"].setup({
+          on_attach = on_attach,
+          capabilities = capabilities,
+          filetypes = {
+            "html",
+            "css",
+            "scss",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+            "svelte",
+            "vue",
+            "php",
+            "eelixir",
+            "eruby",
+          },
+          init_options = {
+            userLanguages = {
+              eelixir = "html",
+              eruby = "html",
+              php = "html",
+            },
+          },
+          settings = {
+            tailwindCSS = {
+              experimental = {
+                classRegex = {
+                  { "tw`([^`]*)`",   "1" },
+                  { 'tw="([^"]*)"',  "1" },
+                  { "tw%(([^)]*)%)", "1" },
+                },
+              },
+            },
+          },
+          root_dir = util.root_pattern(
+            "tailwind.config.js",
+            "tailwind.config.cjs",
+            "tailwind.config.ts",
+            "postcss.config.js",
+            "package.json",
+            ".git"
+          ),
+        })
       end,
       ["html"] = function()
         nvim_lsp["html"].setup({ on_attach = on_attach, capabilities = capabilities })
+      end,
+      ["emmet_ls"] = function()
+        nvim_lsp["emmet_ls"].setup({
+          on_attach = on_attach,
+          capabilities = capabilities,
+          filetypes = {
+            "html",
+            "typescriptreact",
+            "javascriptreact",
+            "css",
+            "sass",
+            "scss",
+            "less",
+            "javascript",
+          },
+        })
       end,
       ["jsonls"] = function()
         nvim_lsp["jsonls"].setup({ on_attach = on_attach, capabilities = capabilities })

@@ -16,6 +16,7 @@ return {
         "eslint",
         "somesass_ls",
         "html",
+        "emmet_ls",
         "clangd",
         "jsonls",
         "vtsls",
