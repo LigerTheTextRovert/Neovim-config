@@ -45,7 +45,7 @@ return {
       }),
       sources = cmp.config.sources({
         { name = "nvim_lsp" },
-        { name = "luasnip" }, -- 🔥 this is needed for rfc/rfce
+        { name = "luasnip" },
         { name = "buffer" },
         { name = "path" },
       }),
@@ -56,14 +56,25 @@ return {
         }),
       },
     })
-
-    -- 🛠 Special config for SCSS (exclude snippets if you want)
+    -- 🛠 Special config for SCSS (keep snippets, but filter buggy ones)
     cmp.setup.filetype("scss", {
-      sources = cmp.config.sources({
+      sources = {
+        {
+          name = "luasnip",
+          entry_filter = function(entry, ctx)
+            -- Reject snippets with problematic VSCode-style placeholders
+            -- Example: `${1:color}`, `${2}`, etc.
+            local text = entry:get_insert_text()
+            if text and text:match("%${%d+") then
+              return false
+            end
+            return true
+          end,
+        },
         { name = "nvim_lsp" },
         { name = "buffer" },
         { name = "path" },
-      }),
+      },
     })
   end,
 }

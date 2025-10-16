@@ -4,18 +4,29 @@ return {
   dependencies = {
     "hrsh7th/cmp-nvim-lsp",
     { "folke/neodev.nvim", opts = {} },
+    "b0o/schemastore.nvim", -- for jsonls
   },
   config = function()
-    local nvim_lsp = require("lspconfig")
     local mason_lspconfig = require("mason-lspconfig")
-    local protocol = require("vim.lsp.protocol")
     local keymap = vim.keymap
-    local diagnostic_virtual_text = true -- initial state
 
-    -- Global diagnostic settings
+    -- diagnostic signs (icons in gutter)
+    local signs = {
+      Error = " ",
+      Warn = " ",
+      Hint = "󰌵",
+      Info = " ",
+    }
+    for type, icon in pairs(signs) do
+      local hl = "DiagnosticSign" .. type
+      vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+    end
+
+    -- diagnostics config
+    local diagnostic_virtual_text = true
     vim.diagnostic.config({
       virtual_text = {
-        source = true, -- shows [eslint], [tsserver], etc.
+        source = true,
         spacing = 2,
         prefix = "●",
       },
@@ -25,13 +36,13 @@ return {
       severity_sort = true,
     })
 
-    -- Toggle virtual text with <leader>tv
     keymap.set("n", "<leader>tv", function()
       diagnostic_virtual_text = not diagnostic_virtual_text
       vim.diagnostic.config({ virtual_text = diagnostic_virtual_text })
       print("Virtual Text: " .. (diagnostic_virtual_text and "ON" or "OFF"))
     end, { desc = "Toggle virtual text" })
 
+    -- formatting on save
     local on_attach = function(client, bufnr)
       if client.server_capabilities.documentFormattingProvider then
         vim.api.nvim_create_autocmd("BufWritePre", {
@@ -44,11 +55,11 @@ return {
       end
     end
 
+    -- keymaps on LspAttach
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("UserLspConfig", {}),
       callback = function(ev)
         local opts = { buffer = ev.buf, silent = true }
-
         keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
         keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
         keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
@@ -66,17 +77,18 @@ return {
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
     mason_lspconfig.setup_handlers({
-      -- function(server)
-      --   nvim_lsp[server].setup({
-      --     on_attach = on_attach,
-      --     capabilities = capabilities,
-      --   })
-      -- end,
+      function(server_name) -- default handler
+        vim.lsp.config(server_name, {
+          on_attach = on_attach,
+          capabilities = capabilities,
+        })
+        vim.lsp.enable(server_name)
+      end,
 
-      -- Lua LSP with Neovim-specific setup
+      -- Lua
       ["lua_ls"] = function()
         require("neodev").setup({})
-        nvim_lsp["lua_ls"].setup({
+        vim.lsp.config("lua_ls", {
           on_attach = on_attach,
           capabilities = capabilities,
           settings = {
@@ -91,20 +103,51 @@ return {
             },
           },
         })
+        vim.lsp.enable("lua_ls")
       end,
 
-      -- Custom servers
+      -- TypeScript / JavaScript
       ["vtsls"] = function()
-        nvim_lsp["vtsls"].setup({ on_attach = on_attach, capabilities = capabilities })
+        vim.lsp.config("vtsls", {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          settings = {
+            typescript = {
+              preferences = {
+                importModuleSpecifier = "relative",
+                includeCompletionsForModuleExports = true,
+              },
+              suggest = { completeFunctionCalls = true },
+            },
+          },
+        })
+        vim.lsp.enable("vtsls")
       end,
-      ["cssls"] = function()
-        nvim_lsp["cssls"].setup({ on_attach = on_attach, capabilities = capabilities })
-      end,
-      ["tailwindcss"] = function()
-        local util = require("lspconfig").util
-        local capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-        nvim_lsp["tailwindcss"].setup({
+      -- CSS (includes SCSS & Less)
+      ["cssls"] = function()
+        vim.lsp.config("cssls", {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          filetypes = { "css", "scss", "less" },
+        })
+        vim.lsp.enable("cssls")
+      end,
+
+      -- SCSS linter / formatter (optional, install `stylelint-lsp`)
+      ["stylelint_lsp"] = function()
+        vim.lsp.config("stylelint_lsp", {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          filetypes = { "css", "scss", "less" },
+        })
+        vim.lsp.enable("stylelint_lsp")
+      end,
+
+      -- TailwindCSS
+      ["tailwindcss"] = function()
+        local util = require("lspconfig.util")
+        vim.lsp.config("tailwindcss", {
           on_attach = on_attach,
           capabilities = capabilities,
           filetypes = {
@@ -148,37 +191,22 @@ return {
             ".git"
           ),
         })
+        vim.lsp.enable("tailwindcss")
       end,
-      ["html"] = function()
-        nvim_lsp["html"].setup({ on_attach = on_attach, capabilities = capabilities })
-      end,
-      ["emmet_ls"] = function()
-        nvim_lsp["emmet_ls"].setup({
+
+      -- JSON
+      ["jsonls"] = function()
+        vim.lsp.config("jsonls", {
           on_attach = on_attach,
           capabilities = capabilities,
-          filetypes = {
-            "html",
-            "typescriptreact",
-            "javascriptreact",
-            "css",
-            "sass",
-            "scss",
-            "less",
-            "javascript",
+          settings = {
+            json = {
+              schemas = require("schemastore").json.schemas(),
+              validate = { enable = true },
+            },
           },
         })
-      end,
-      ["jsonls"] = function()
-        nvim_lsp["jsonls"].setup({ on_attach = on_attach, capabilities = capabilities })
-      end,
-      ["clangd"] = function()
-        nvim_lsp["clangd"].setup({ on_attach = on_attach, capabilities = capabilities })
-      end,
-      ["eslint"] = function()
-        nvim_lsp["eslint"].setup({ on_attach = on_attach, capabilities = capabilities })
-      end,
-      ["pyright"] = function()
-        nvim_lsp["pyright"].setup({ on_attach = on_attach, capabilities = capabilities })
+        vim.lsp.enable("jsonls")
       end,
     })
   end,

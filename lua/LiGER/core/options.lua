@@ -1,6 +1,6 @@
 vim.cmd("let g:netrw_liststyle = 3")
 
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 vim.opt.number = true
 
 --tab and indentation
@@ -26,7 +26,7 @@ vim.opt.backspace = "indent,eol,start"
 
 vim.opt.splitright = true
 vim.opt.splitbelow = true
-vim.opt.scrolloff = 2
-vim.opt.sidescrolloff = 2
+vim.opt.scrolloff = 5
+vim.opt.sidescrolloff = 5
 
 vim.opt.guicursor = ""
