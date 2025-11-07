@@ -80,7 +80,18 @@ return {
           },
         },
         lualine_b = { "branch" },
-        lualine_c = { "filename" },
+        lualine_c = {
+          {
+            "filename", -- component name
+            path = 1, -- show relative path
+            symbols = { -- add dot for unsaved changes
+              modified = " ●",
+              readonly = " ",
+              unnamed = "[No Name]",
+              newfile = "[New]",
+            },
+          },
+        },
         lualine_x = {},
         lualine_y = {},
         lualine_z = {},

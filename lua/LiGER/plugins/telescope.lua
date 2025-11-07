@@ -34,6 +34,6 @@ return {
     keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
     keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
     keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Find buffers" })
-    keymap.set("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<cr>", { desc = "Find buffers" })
+    keymap.set("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<cr>", { desc = "" })
   end,
 }
