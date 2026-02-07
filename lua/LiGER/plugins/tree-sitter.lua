@@ -6,28 +6,25 @@ return {
     "windwp/nvim-ts-autotag",
   },
   config = function()
-    -- import nvim-treesitter plugin
     local treesitter = require("nvim-treesitter.configs")
 
-    -- configure treesitter
-    treesitter.setup({ -- enable syntax highlighting
-      playground = { enable = true },
+    treesitter.setup({
+      -- Enable auto-installation of parsers
+      auto_install = true,
+
+      -- Keep your existing highlight config
       highlight = {
         enable = true,
       },
-      -- ...
-      inject = {
-        -- Highlight JSDoc comments
-        jsdoc = {
-          enable = true,
-          query = [[
-        (jsdoc_comment) @jsdoc
-      ]],
-        },
-      },
-      -- enable indentation
+
       indent = { enable = true },
-      -- ensure these language parsers are installed
+
+      -- IMPORTANT: Add these for better integration
+      autotag = {
+        enable = true,
+      },
+
+      -- Your parser list is fine
       ensure_installed = {
         "json",
         "javascript",
@@ -54,15 +51,6 @@ return {
         "python",
         "c",
       },
-      -- incremental_selection = {
-      --     enable = true,
-      --     keymaps = {
-      --         init_selection = "<C-space>",
-      --         node_incremental = "<C-space>",
-      --         scope_incremental = false,
-      --         node_decremental = "<bs>",
-      --     },
-      -- },
     })
   end,
 }
