@@ -22,16 +22,16 @@
 
 return {
   "nvim-lualine/lualine.nvim",
-  dependencies = { "$vim-tree/nvim-web-devicons" },
+  dependencies = { "nvim-tree/nvim-web-devicons" },
   config = function()
     require("lualine").setup({
       options = {
         icons_enabled = true,
-        theme = "modus-vivendi",
-        -- component_separators = { left = "", right = "" },
-        -- section_separators = { left = "", right = "" },
-        component_separators = {},
-        section_separators = {},
+        theme = "auto",
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
+        -- component_separators = {},
+        -- section_separators = {},
         disabled_filetypes = {
           statusline = {},
           winbar = {},
@@ -92,7 +92,22 @@ return {
             },
           },
         },
-        lualine_x = {},
+        lualine_x = {
+          {
+            "diagnostics",
+            sources = { "nvim_diagnostic" },
+            sections = { "error", "warn", "info", "hint" },
+            symbols = {
+              error = " ",
+              warn = " ",
+              info = " ",
+              hint = "󰌵 ",
+            },
+            colored = true,
+            update_in_insert = true,
+            always_visible = true,
+          },
+        },
         lualine_y = {},
         lualine_z = {},
       },

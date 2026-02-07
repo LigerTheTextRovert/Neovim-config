@@ -51,9 +51,13 @@ return {
       }),
       formatting = {
         format = lspkind.cmp_format({
+          mode = "symbol_text", -- shows only one icon + text
           maxwidth = 50,
           ellipsis_char = "...",
+          show_labelDetails = true,
         }),
+
+        fields = { "abbr", "kind", "menu" },
       },
     })
     -- 🛠 Special config for SCSS (keep snippets, but filter buggy ones)

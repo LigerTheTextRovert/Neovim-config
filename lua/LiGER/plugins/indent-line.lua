@@ -3,7 +3,8 @@ return {
   main = "ibl",
   opts = {
     -- indent = { char = "▏" }, -- or "▏", "¦", "┆", "┊"
-    indent = { char = "│" }, -- or "▏", "¦", "┆", "┊"
+    -- indent = { char = "│" }, -- or "▏", "¦", "┆", "┊"
+    indent = { char = "┆" }, -- or "▏", "¦", "┆", "┊"
     scope = {
       enabled = true,
       show_start = false,
