@@ -60,17 +60,8 @@ return {
       group = vim.api.nvim_create_augroup("UserLspConfig", {}),
       callback = function(ev)
         local opts = { buffer = ev.buf, silent = true }
-        keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
-        keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-        keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
-        keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
-        keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
-        keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
         keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-        keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
-        keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
         keymap.set("n", "K", vim.lsp.buf.hover, opts)
-        keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
       end,
     })
 
@@ -87,7 +78,7 @@ return {
 
       -- Lua
       ["lua_ls"] = function()
-        require("neodev").setup({})
+        require("neodev").setup()
         vim.lsp.config("lua_ls", {
           on_attach = on_attach,
           capabilities = capabilities,
@@ -207,6 +198,57 @@ return {
           },
         })
         vim.lsp.enable("jsonls")
+      end,
+      ["pyright"] = function()
+        vim.lsp.config("pyright", {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          settings = {
+            python = {
+              pythonPath = vim.fn.getcwd() .. "/venv/bin/python",
+              analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "workspace",
+              },
+            },
+          },
+        })
+        vim.lsp.enable("pyright")
+      end,
+      ["gopls"] = function()
+        require("lspconfig").gopls.setup({
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { "gopls", "serve" },
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+              },
+              staticcheck = true,
+              gofumpt = true,
+              codelenses = {
+                generate = true,
+                gc_details = true,
+                test = true,
+                tidy = true,
+              },
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+              },
+              usePlaceholders = true,
+              completeUnimported = true,
+              semanticTokens = true,
+            },
+          },
+        })
       end,
     })
   end,
