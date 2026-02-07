@@ -7,9 +7,13 @@ function RunCurrentFile()
   if ext == "js" then
     cmd = "node " .. file
   elseif ext == "ts" then
-    cmd = "ts-node " .. file
+    cmd = "tsx" .. file
   elseif ext == "py" then
     cmd = "python3 " .. file
+  elseif ext == "java" then
+    local class_name = vim.fn.expand("%:t:r")
+    local dir = vim.fn.expand("%:p:h")
+    cmd = string.format("cd %s && javac %s && java %s", dir, file, class_name)
   elseif ext == "cpp" then
     local output = vim.fn.expand("%:r")
     cmd = string.format("g++ %s -o %s && ./%s", file, output, vim.fn.fnamemodify(output, ":t"))
