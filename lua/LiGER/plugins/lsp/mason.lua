@@ -16,7 +16,6 @@ return {
 				"gopls",
 				"eslint",
 				"somesass_ls",
-				"html",
 				"emmet_ls",
 				"clangd",
 				"jsonls",

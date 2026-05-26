@@ -10,7 +10,8 @@ return {
 		local mason_lspconfig = require("mason-lspconfig")
 
 		-- diagnostic signs
-		local signs = { Error = " ", Warn = " ", Hint = "󰌵", Info = " " }
+		-- local signs = { Error = " ", Warn = " ", Hint = "󰌵", Info = " " }
+		local signs = { Error = "E ", Warn = "W ", Hint = "H", Info = "I " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
@@ -77,18 +78,55 @@ return {
 		vim.lsp.config("vtsls", {
 			on_attach = on_attach,
 			capabilities = capabilities,
+			filetypes = {
+				"javascript",
+				"javascriptreact",
+				"typescript",
+				"typescriptreact",
+			},
 			settings = {
+				vtsls = {
+					-- auto-install missing ts server plugins
+					autoUseWorkspaceTsdk = true,
+					experimental = {
+						completion = {
+							enableServerSideFuzzyMatch = true, -- better completions
+						},
+					},
+				},
 				typescript = {
 					preferences = {
 						importModuleSpecifier = "relative",
 						includeCompletionsForModuleExports = true,
+						quoteStyle = "single",
+					},
+					suggest = { completeFunctionCalls = true },
+					-- inlay hints (big quality of life)
+					inlayHints = {
+						parameterNames = { enabled = "literals" }, -- or "all"
+						parameterTypes = { enabled = true },
+						variableTypes = { enabled = true },
+						propertyDeclarationTypes = { enabled = true },
+						functionLikeReturnTypes = { enabled = true },
+						enumMemberValues = { enabled = true },
+					},
+					-- better code navigation
+					referencesCodeLens = { enabled = true },
+					implementationsCodeLens = { enabled = true },
+				},
+				javascript = {
+					-- mirror the same settings for JS files
+					inlayHints = {
+						parameterNames = { enabled = "literals" },
+						parameterTypes = { enabled = true },
+						variableTypes = { enabled = true },
+						functionLikeReturnTypes = { enabled = true },
 					},
 					suggest = { completeFunctionCalls = true },
 				},
 			},
 		})
 
-		-- tailwindcss
 		vim.lsp.config("tailwindcss", {
 			on_attach = on_attach,
 			capabilities = capabilities,
@@ -120,14 +158,6 @@ return {
 					},
 				},
 			},
-			root_dir = require("lspconfig.util").root_pattern(
-				"tailwind.config.js",
-				"tailwind.config.cjs",
-				"tailwind.config.ts",
-				"postcss.config.js",
-				"package.json",
-				".git"
-			),
 		})
 
 		-- jsonls + schemastore
@@ -155,6 +185,17 @@ return {
 						diagnosticMode = "workspace",
 					},
 				},
+			},
+		})
+
+		vim.lsp.config("emmet_ls", {
+			on_attach = on_attach,
+			capabilities = capabilities,
+			filetypes = {
+				"html",
+				"css",
+				"javascriptreact",
+				"typescriptreact",
 			},
 		})
 
@@ -189,12 +230,6 @@ return {
 			},
 		})
 
-		vim.lsp.enable({ "lua_ls", "vtsls", "tailwindcss", "jsonls", "pyright", "gopls" })
-
-		-- Optional: If you want mason-lspconfig to auto-install them (and potentially auto-enable others later)
-		-- mason_lspconfig.setup({
-		--   ensure_installed = { "lua_ls", "vtsls", "tailwindcss", "jsonls", "pyright", "gopls" },
-		--   -- automatic_enable = true,  -- uncomment if you add more servers later without vim.lsp.config()
-		-- })
+		vim.lsp.enable({ "lua_ls", "vtsls", "tailwindcss", "jsonls", "pyright", "gopls", "emmet_ls" })
 	end,
 }
