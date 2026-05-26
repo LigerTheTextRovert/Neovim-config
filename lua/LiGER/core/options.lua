@@ -10,7 +10,7 @@ vim.opt.expandtab = true
 vim.opt.autoindent = true
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "rust", "go", "c", "cpp", "py", "js" },
+	pattern = { "rust", "go", "c", "cpp", "py" },
 	callback = function()
 		vim.bo.tabstop = 4
 		vim.bo.shiftwidth = 4
