@@ -3,14 +3,11 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
-		{ "folke/neodev.nvim", opts = {} },
+		{ "folke/lazydev.nvim", ft = "lua", opts = {} },
 		"b0o/schemastore.nvim", -- for jsonls
 	},
 	config = function()
-		local mason_lspconfig = require("mason-lspconfig")
-
-		-- diagnostic signs
-		-- local signs = { Error = " ", Warn = " ", Hint = "󰌵", Info = " " }
+		-- Diagnostic signs
 		local signs = { Error = "E ", Warn = "W ", Hint = "H", Info = "I " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
@@ -18,12 +15,17 @@ return {
 		end
 
 		vim.diagnostic.config({
-			virtual_text = { source = true, spacing = 2, prefix = "●" },
+			virtual_text = { source = "if_many", spacing = 2, prefix = "●" },
+			float = { border = "rounded", source = true },
 			signs = true,
 			underline = true,
 			update_in_insert = false,
 			severity_sort = true,
 		})
+
+		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+		vim.lsp.handlers["textDocument/signatureHelp"] =
+			vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
 		local diagnostic_virtual_text = true
 		vim.keymap.set("n", "<leader>tv", function()
@@ -32,14 +34,37 @@ return {
 			print("Virtual Text: " .. (diagnostic_virtual_text and "ON" or "OFF"))
 		end, { desc = "Toggle virtual text" })
 
-		-- shared on_attach
+		local function get_python_path(workspace)
+			local active_venv = os.getenv("VIRTUAL_ENV")
+			if active_venv then
+				return active_venv .. "/bin/python"
+			end
+
+			for _, pattern in ipairs({ "/.venv/bin/python", "/venv/bin/python" }) do
+				local python = workspace .. pattern
+				if vim.fn.executable(python) == 1 then
+					return python
+				end
+			end
+
+			return "python3"
+		end
+
+		-- Shared on_attach. Formatting is intentionally left to conform.nvim so one
+		-- tool owns format-on-save and LSP servers do not fight external formatters.
 		local on_attach = function(client, bufnr)
-			if client.server_capabilities.documentFormattingProvider then
-				vim.api.nvim_create_autocmd("BufWritePre", {
-					group = vim.api.nvim_create_augroup("FormatOnSave_" .. bufnr, { clear = true }),
+			if client.supports_method("textDocument/inlayHint") and vim.lsp.inlay_hint then
+				pcall(vim.lsp.inlay_hint.enable, true, { bufnr = bufnr })
+			end
+
+			if client.supports_method("textDocument/codeLens") then
+				local group = vim.api.nvim_create_augroup("LspCodeLens_" .. bufnr, { clear = true })
+				vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+					group = group,
 					buffer = bufnr,
-					callback = vim.lsp.buf.format,
+					callback = vim.lsp.codelens.refresh,
 				})
+				vim.lsp.codelens.refresh()
 			end
 		end
 
@@ -54,13 +79,20 @@ return {
 			end,
 		})
 
-		local capabilities = require("cmp_nvim_lsp").default_capabilities()
+		local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+		capabilities.textDocument.foldingRange = {
+			dynamicRegistration = false,
+			lineFoldingOnly = true,
+		}
 
-		-- lua
-		require("neodev").setup({})
-		vim.lsp.config("lua_ls", {
-			on_attach = on_attach,
-			capabilities = capabilities,
+		local function setup(server, opts)
+			opts = opts or {}
+			opts.capabilities = vim.tbl_deep_extend("force", {}, capabilities, opts.capabilities or {})
+			opts.on_attach = opts.on_attach or on_attach
+			vim.lsp.config(server, opts)
+		end
+
+		setup("lua_ls", {
 			settings = {
 				Lua = {
 					runtime = { version = "LuaJIT" },
@@ -69,15 +101,13 @@ return {
 						library = vim.api.nvim_get_runtime_file("", true),
 						checkThirdParty = false,
 					},
+					completion = { callSnippet = "Replace" },
 					telemetry = { enable = false },
 				},
 			},
 		})
 
-		-- vtsls (typescript/javascript)
-		vim.lsp.config("vtsls", {
-			on_attach = on_attach,
-			capabilities = capabilities,
+		setup("vtsls", {
 			filetypes = {
 				"javascript",
 				"javascriptreact",
@@ -86,11 +116,10 @@ return {
 			},
 			settings = {
 				vtsls = {
-					-- auto-install missing ts server plugins
 					autoUseWorkspaceTsdk = true,
 					experimental = {
 						completion = {
-							enableServerSideFuzzyMatch = true, -- better completions
+							enableServerSideFuzzyMatch = true,
 						},
 					},
 				},
@@ -101,35 +130,36 @@ return {
 						quoteStyle = "single",
 					},
 					suggest = { completeFunctionCalls = true },
-					-- inlay hints (big quality of life)
 					inlayHints = {
-						parameterNames = { enabled = "literals" }, -- or "all"
+						parameterNames = { enabled = "literals" },
 						parameterTypes = { enabled = true },
 						variableTypes = { enabled = true },
 						propertyDeclarationTypes = { enabled = true },
 						functionLikeReturnTypes = { enabled = true },
 						enumMemberValues = { enabled = true },
 					},
-					-- better code navigation
 					referencesCodeLens = { enabled = true },
 					implementationsCodeLens = { enabled = true },
 				},
 				javascript = {
-					-- mirror the same settings for JS files
-					inlayHints = {
-						parameterNames = { enabled = "literals" },
-						parameterTypes = { enabled = true },
-						variableTypes = { enabled = true },
-						functionLikeReturnTypes = { enabled = true },
+					preferences = {
+						importModuleSpecifier = "relative",
+						includeCompletionsForModuleExports = true,
+						quoteStyle = "single",
 					},
 					suggest = { completeFunctionCalls = true },
+					-- inlayHints = {
+					-- 	parameterNames = { enabled = "literals" },
+					-- 	parameterTypes = { enabled = true },
+					-- 	variableTypes = { enabled = true },
+					-- 	propertyDeclarationTypes = { enabled = true },
+					-- 	functionLikeReturnTypes = { enabled = true },
+					-- },
 				},
 			},
 		})
 
-		vim.lsp.config("tailwindcss", {
-			on_attach = on_attach,
-			capabilities = capabilities,
+		setup("tailwindcss", {
 			filetypes = {
 				"html",
 				"css",
@@ -149,6 +179,7 @@ return {
 			},
 			settings = {
 				tailwindCSS = {
+					classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
 					experimental = {
 						classRegex = {
 							{ "tw`([^`]*)`", "1" },
@@ -160,10 +191,7 @@ return {
 			},
 		})
 
-		-- jsonls + schemastore
-		vim.lsp.config("jsonls", {
-			on_attach = on_attach,
-			capabilities = capabilities,
+		setup("jsonls", {
 			settings = {
 				json = {
 					schemas = require("schemastore").json.schemas(),
@@ -172,40 +200,37 @@ return {
 			},
 		})
 
-		-- pyright
-		vim.lsp.config("pyright", {
-			on_attach = on_attach,
-			capabilities = capabilities,
+		setup("pyright", {
+			before_init = function(_, config)
+				config.settings.python.pythonPath = get_python_path(config.root_dir or vim.fn.getcwd())
+			end,
 			settings = {
 				python = {
-					pythonPath = vim.fn.getcwd() .. "/venv/bin/python", -- consider using a venv selector instead
+					pythonPath = "python3",
 					analysis = {
 						autoSearchPaths = true,
 						useLibraryCodeForTypes = true,
 						diagnosticMode = "workspace",
+						typeCheckingMode = "basic",
 					},
 				},
 			},
 		})
 
-		vim.lsp.config("emmet_ls", {
-			on_attach = on_attach,
-			capabilities = capabilities,
+		setup("emmet_ls", {
 			filetypes = {
 				"html",
 				"css",
+				"scss",
 				"javascriptreact",
 				"typescriptreact",
 			},
 		})
 
-		-- gopls
-		vim.lsp.config("gopls", {
-			on_attach = on_attach,
-			capabilities = capabilities,
+		setup("gopls", {
 			settings = {
 				gopls = {
-					analyses = { unusedparams = true },
+					analyses = { unusedparams = true, shadow = true },
 					staticcheck = true,
 					codelenses = {
 						generate = true,
@@ -213,15 +238,15 @@ return {
 						test = true,
 						tidy = true,
 					},
-					hints = {
-						assignVariableTypes = true,
-						compositeLiteralFields = true,
-						compositeLiteralTypes = true,
-						constantValues = true,
-						functionTypeParameters = true,
-						parameterNames = true,
-						rangeVariableTypes = true,
-					},
+					-- hints = {
+					-- 	assignVariableTypes = true,
+					-- 	compositeLiteralFields = true,
+					-- 	compositeLiteralTypes = true,
+					-- 	constantValues = true,
+					-- 	functionTypeParameters = true,
+					-- 	parameterNames = true,
+					-- 	rangeVariableTypes = true,
+					-- },
 					completeUnimported = true,
 					completeFunctionCalls = false,
 					usePlaceholders = false,
@@ -230,6 +255,37 @@ return {
 			},
 		})
 
-		vim.lsp.enable({ "lua_ls", "vtsls", "tailwindcss", "jsonls", "pyright", "gopls", "emmet_ls" })
+		setup("cssls")
+		setup("somesass_ls")
+		setup("clangd")
+		setup("rust_analyzer", {
+			settings = {
+				["rust-analyzer"] = {
+					cargo = { allFeatures = true },
+					check = { command = "clippy" },
+					inlayHints = { lifetimeElisionHints = { enable = "skip_trivial" } },
+				},
+			},
+		})
+		setup("eslint", {
+			settings = {
+				workingDirectory = { mode = "auto" },
+			},
+		})
+
+		vim.lsp.enable({
+			"lua_ls",
+			"vtsls",
+			"tailwindcss",
+			"jsonls",
+			"pyright",
+			"gopls",
+			"emmet_ls",
+			"cssls",
+			"somesass_ls",
+			"clangd",
+			"rust_analyzer",
+			"eslint",
+		})
 	end,
 }
