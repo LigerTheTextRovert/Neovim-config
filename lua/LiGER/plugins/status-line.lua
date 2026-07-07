@@ -31,7 +31,7 @@ return {
 						"mode",
 						fmt = function(str)
 							-- return str:sub(1, 1):upper() .. str:sub(2):lower()
-							return str:upper()
+							return "--" .. str:upper() .. "--"
 						end,
 					},
 				},
@@ -47,7 +47,7 @@ return {
 						sources = { "nvim_diagnostic" },
 						sections = { "error", "warn", "hint" },
 						symbols = { error = "E:", warn = "W:", hint = "H:" },
-						colored = false,
+						colored = true,
 						update_in_insert = true,
 						always_visible = true,
 					},

@@ -3,6 +3,7 @@ return {
 	event = "InsertEnter",
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
+		"hrsh7th/cmp-nvim-lsp-signature-help",
 		"hrsh7th/cmp-buffer",
 		"hrsh7th/cmp-path",
 		{
@@ -19,6 +20,10 @@ return {
 		local luasnip = require("luasnip")
 		local lspkind = require("lspkind")
 
+		luasnip.config.setup({
+			history = true,
+			delete_check_events = "TextChanged",
+		})
 		require("luasnip.loaders.from_vscode").lazy_load()
 
 		-- VSCode-like highlight groups
@@ -37,20 +42,22 @@ return {
 		vim.api.nvim_set_hl(0, "CmpItemKindModule", { fg = "#4ec9b0" })
 		vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#606060", italic = true })
 		vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { fg = "#606060", strikethrough = true })
+		vim.api.nvim_set_hl(0, "CmpPmenu", { link = "Pmenu" })
+		vim.api.nvim_set_hl(0, "CmpSel", { link = "PmenuSel" })
+		vim.api.nvim_set_hl(0, "CmpDoc", { link = "NormalFloat" })
 
 		cmp.setup({
+			preselect = cmp.PreselectMode.Item,
 			window = {
-				-- completion = {
-				-- border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-				-- winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:None",
-				-- scrollbar = false,
-				-- col_offset = -3,
-				-- side_padding = 2,
-				-- },
-				-- documentation = {
-				-- 	border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-				-- 	winhighlight = "Normal:CmpDoc",
-				-- },
+				completion = {
+					border = "rounded",
+					winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+				},
+				documentation = {
+					border = "rounded",
+					winhighlight = "Normal:CmpDoc",
+					scrollbar = false,
+				},
 			},
 			completion = {
 				completeopt = "menu,menuone,noinsert",
@@ -86,6 +93,7 @@ return {
 			}),
 			sources = cmp.config.sources({
 				{ name = "nvim_lsp", priority = 1000 },
+				{ name = "nvim_lsp_signature_help", priority = 900 },
 				{ name = "luasnip", priority = 750 },
 				{ name = "buffer", priority = 500, keyword_length = 3 },
 				{ name = "path", priority = 250 },
@@ -126,6 +134,8 @@ return {
 		-- SCSS filetype override
 		cmp.setup.filetype("scss", {
 			sources = cmp.config.sources({
+				{ name = "nvim_lsp", priority = 1000 },
+				{ name = "nvim_lsp_signature_help", priority = 900 },
 				{
 					name = "luasnip",
 					priority = 750,
@@ -137,7 +147,6 @@ return {
 						return true
 					end,
 				},
-				{ name = "nvim_lsp", priority = 1000 },
 				{ name = "buffer", priority = 500 },
 				{ name = "path", priority = 250 },
 			}),

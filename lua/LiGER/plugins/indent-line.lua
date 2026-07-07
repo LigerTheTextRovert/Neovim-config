@@ -20,6 +20,7 @@ return {
 				"dashboard",
 				"lspinfo",
 				"packer",
+				"go",
 			},
 			buftypes = {
 				"terminal",
