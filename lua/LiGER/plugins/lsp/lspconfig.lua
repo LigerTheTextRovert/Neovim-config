@@ -59,7 +59,7 @@ return {
 
 			if client.supports_method("textDocument/codeLens") then
 				local group = vim.api.nvim_create_augroup("LspCodeLens_" .. bufnr, { clear = true })
-				vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+				vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold" }, {
 					group = group,
 					buffer = bufnr,
 					callback = vim.lsp.codelens.refresh,
@@ -127,34 +127,27 @@ return {
 					preferences = {
 						importModuleSpecifier = "relative",
 						includeCompletionsForModuleExports = true,
+						includeCompletionsForImportStatements = true,
+						includePackageJsonAutoImports = "on",
 						quoteStyle = "single",
 					},
-					suggest = { completeFunctionCalls = true },
-					inlayHints = {
-						parameterNames = { enabled = "literals" },
-						parameterTypes = { enabled = true },
-						variableTypes = { enabled = true },
-						propertyDeclarationTypes = { enabled = true },
-						functionLikeReturnTypes = { enabled = true },
-						enumMemberValues = { enabled = true },
+					suggest = {
+						completeFunctionCalls = true,
+						autoImports = true,
 					},
-					referencesCodeLens = { enabled = true },
-					implementationsCodeLens = { enabled = true },
 				},
 				javascript = {
 					preferences = {
 						importModuleSpecifier = "relative",
 						includeCompletionsForModuleExports = true,
+						includeCompletionsForImportStatements = true,
+						includePackageJsonAutoImports = "on",
 						quoteStyle = "single",
 					},
-					suggest = { completeFunctionCalls = true },
-					-- inlayHints = {
-					-- 	parameterNames = { enabled = "literals" },
-					-- 	parameterTypes = { enabled = true },
-					-- 	variableTypes = { enabled = true },
-					-- 	propertyDeclarationTypes = { enabled = true },
-					-- 	functionLikeReturnTypes = { enabled = true },
-					-- },
+					suggest = {
+						completeFunctionCalls = true,
+						autoImports = true,
+					},
 				},
 			},
 		})

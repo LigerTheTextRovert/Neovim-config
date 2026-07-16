@@ -93,11 +93,16 @@ return {
 			}),
 			sources = cmp.config.sources({
 				{ name = "nvim_lsp", priority = 1000 },
-				{ name = "nvim_lsp_signature_help", priority = 900 },
+				-- { name = "nvim_lsp_signature_help", priority = 900 },
 				{ name = "luasnip", priority = 750 },
 				{ name = "buffer", priority = 500, keyword_length = 3 },
 				{ name = "path", priority = 250 },
 			}),
+			performance = {
+				debounce = 0,
+				throttle = 0,
+				fetching_timeout = 200,
+			},
 			formatting = {
 				fields = { "kind", "abbr", "menu" },
 				format = function(entry, vim_item)
