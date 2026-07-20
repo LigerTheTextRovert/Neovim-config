@@ -1,101 +1,162 @@
 # Neovim Configuration
 
-This repository contains a personalized Neovim configuration tailored for efficient and enjoyable coding experiences.
-
-## Features
-
-- **Language Support**: Enhanced syntax highlighting and indentation for various programming languages.
-- **Keybindings**: Custom shortcuts to streamline navigation and editing.
-- **Plugins**: A curated selection of plugins to boost productivity.
-- **Theme**: Aesthetic color schemes for a pleasant visual experience.
-
-## Supported Languages
-
-The configuration includes support for multiple programming languages, ensuring proper syntax highlighting and indentation.
-
-## Keybindings
-
-Custom keybindings have been set up to enhance the editing workflow.
-
-- ### Telescope keybindings
-
-| Keybind      | Description                     |
-| ------------ | ------------------------------- |
-| `<leader>ff` | Fuzzy find files in cwd         |
-| `<leader>fr` | Fuzzy find recent files         |
-| `<leader>fs` | Find string in cwd              |
-| `<leader>fc` | Find string under cursor in cwd |
-| `<leader>fb` | Find buffers                    |
-
-- ### Keymaps for spliting windows
-
-| Keybind      | Description               |
-| ------------ | ------------------------- |
-| `<leader>sv` | Split window vertically   |
-| `<leader>sh` | Split window horizontally |
-| `<leader>se` | Make splits equal size    |
-| `<leader>sx` | Close current split       |
-
-- ### Keymaps for easy navigation though file
-
-| Keybind          | Description                                             |
-| ---------------- | ------------------------------------------------------- |
-| `J` (visual)     | Move selected lines down while maintaining indentation. |
-| `K` (visual)     | Move selected lines up while maintaining indentation.   |
-| `J` (normal)     | Join lines without moving the cursor position.          |
-| `n` (normal)     | Jump to next search match and center the cursor.        |
-| `N` (normal)     | Jump to previous search match and center the cursor.    |
-| `<C-d>` (normal) | Scroll half-page down and center the cursor.            |
-| `<C-u>` (normal) | Scroll half-page up and center the cursor.              |
-
-- ### file-tree keymaps
-
-| Keybind      | Description                          |
-| ------------ | ------------------------------------ |
-| `n` (normal) | Opens up the oil-nvim                |
-| `<leader>ee` | Toggle file explorer                 |
-| `<leader>ef` | Toggle file explorer on current file |
-| `<leader>ec` | Collapse file explorer               |
-| `<leader>er` | Refresh file explorer                |
+Personalized Neovim config using [lazy.nvim](https://github.com/folke/lazy.nvim) as the plugin manager.
 
 ## Plugins
 
-A variety of plugins are integrated to extend Neovim's functionality.
+| Plugin | Purpose |
+|--------|---------|
+| [lazy.nvim](https://github.com/folke/lazy.nvim) | Plugin manager |
+| [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) | LSP configuration |
+| [mason.nvim](https://github.com/williamboman/mason.nvim) | LSP/tool installer |
+| [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) | Autocompletion |
+| [LuaSnip](https://github.com/L3MON4D3/LuaSnip) | Snippet engine |
+| [telescope/snacks.nvim picker](https://github.com/folke/snacks.nvim) | Fuzzy finder & file explorer |
+| [oil.nvim](https://github.com/stevearc/oil.nvim) | File explorer (directory buffers) |
+| [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax highlighting & trees |
+| [vim-nightfly-colors](https://github.com/bluz71/vim-nightfly-colors) | Color scheme |
+| [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | Status line |
+| [conform.nvim](https://github.com/stevearc/conform.nvim) | Formatting |
+| [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | Git decorations |
+| [vim-fugitive](https://github.com/tpope/vim-fugitive) | Git commands |
+| [Comment.nvim](https://github.com/numToStr/Comment.nvim) | Commenting |
+| [auto-session](https://github.com/rmagatti/auto-session) | Session management |
+| [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) | Tmux/split navigation |
 
-## Theme
+## LSP Servers
 
-The configuration applies an aesthetic color scheme for a pleasant coding environment.
+`lua_ls`, `vtsls`, `pyright`, `gopls`, `tailwindcss`, `jsonls`, `emmet_ls`, `cssls`, `somesass_ls`, `clangd`, `rust_analyzer`, `eslint`
+
+## Formatters
+
+`prettier`, `stylua`, `black`, `isort`, `goimports`, `gofumpt`
+
+## Keybindings
+
+Leader key: `<Space>`
+
+### Find & Search
+
+| Keybind | Description |
+|---------|-------------|
+| `<leader>ff` | Find files |
+| `<leader>fb` | Find buffers |
+| `<leader>fc` | Find config file |
+| `<leader>/` | Grep project |
+| `<leader>sb` | Search buffer lines |
+| `<leader>sB` | Grep open buffers |
+| `<leader>sg` | Grep project |
+| `<leader>sD` | Buffer diagnostics |
+
+### Git
+
+| Keybind | Description |
+|---------|-------------|
+| `<leader>gl` | Git log (current line) |
+| `<leader>gs` | Git stash |
+| `<leader>hp` | Toggle line blame / preview hunk |
+
+### LSP
+
+| Keybind | Description |
+|---------|-------------|
+| `gd` | Goto definition |
+| `gD` | Goto declaration |
+| `gr` | References |
+| `gI` | Goto implementation |
+| `K` | Hover documentation |
+| `<leader>rn` | Rename symbol |
+| `<leader>ca` | Code actions |
+| `<leader>tv` | Toggle diagnostic virtual text |
+
+### Formatting
+
+| Keybind | Description |
+|---------|-------------|
+| `<leader>mp` | Format file or range |
+
+### Splits & Windows
+
+| Keybind | Description |
+|---------|-------------|
+| `<leader>sv` | Split vertically |
+| `<leader>sh` | Split horizontally |
+| `<leader>se` | Equalize splits |
+| `<leader>sx` | Close split |
+| `<C-h>` | Move to left split |
+| `<C-j>` | Move to lower split |
+| `<C-k>` | Move to upper split |
+| `<C-l>` | Move to right split |
+
+### Navigation
+
+| Keybind | Description |
+|---------|-------------|
+| `J` (visual) | Move selection down |
+| `K` (visual) | Move selection up |
+| `J` (normal) | Join lines (cursor stays) |
+| `n` | Next search match (centered) |
+| `N` | Previous search match (centered) |
+| `<C-d>` | Half-page down (centered) |
+| `<C-u>` | Half-page up (centered) |
+
+### File Explorer
+
+| Keybind | Description |
+|---------|-------------|
+| `-` | Open Oil (parent directory) |
+
+### Session
+
+| Keybind | Description |
+|---------|-------------|
+| `<leader>wr` | Restore session |
+| `<leader>ws` | Save session |
+
+### Run File
+
+| Keybind | Description |
+|---------|-------------|
+| `<leader>0` | Run current file (js/ts/py/java/cpp/c) |
+
+### Completion (Insert Mode)
+
+| Keybind | Description |
+|---------|-------------|
+| `<C-j>` | Next item |
+| `<C-k>` | Previous item |
+| `<C-Space>` | Trigger completion |
+| `<C-e>` | Abort completion |
+| `<CR>` | Confirm selection |
+| `<Tab>` | Jump forward in snippet |
+| `<S-Tab>` | Jump backward in snippet |
+| `<C-f>` | Scroll docs down |
+| `<C-b>` | Scroll docs up |
+
+### Oil Buffer Keymaps
+
+| Keybind | Description |
+|---------|-------------|
+| `<CR>` | Open/select |
+| `-` | Go to parent |
+| `<C-s>` | Open in vertical split |
+| `<C-h>` | Open in horizontal split |
+| `<C-t>` | Open in tab |
+| `<C-p>` | Preview |
+| `<C-c>` | Close |
+| `<C-l>` | Refresh |
+| `gs` | Change sort |
+| `gx` | Open externally |
+| `g.` | Toggle hidden files |
 
 ## Installation
 
-To set up this Neovim configuration:
+```sh
+git clone https://github.com/LigerTheTextRovert/Neovim-config.git ~/.config/nvim
+```
 
-1. **Clone the Repository**:
-
-   ```sh
-   git clone https://github.com/LigerTheTextRovert/Neovim-config.git ~/.config/nvim
-   ```
-
-2. **Install Dependencies**:
-
-   Ensure that all necessary dependencies, such as Neovim and any required plugins, are installed.
-
-3. **Launch Neovim**:
-
-   Open Neovim to allow the plugins to install and the configuration to load.
-
-## Usage
-
-Once installed, launch Neovim to experience the customized setup. Explore the keybindings and features to familiarize yourself with the environment.
-
-## Contributing
-
-Contributions are welcome! If you have suggestions or improvements, feel free to fork the repository and submit a pull request.
+Open Neovim and let lazy.nvim install all plugins automatically.
 
 ## License
 
-This project is licensed under the MIT License.
-
----
-
-For more details and the latest updates, visit the [GitHub repository](https://github.com/LigerTheTextRovert/Neovim-config).
+MIT
