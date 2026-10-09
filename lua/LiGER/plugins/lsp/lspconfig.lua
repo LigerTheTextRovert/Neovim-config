@@ -15,17 +15,24 @@ return {
 		end
 
 		vim.diagnostic.config({
-			virtual_text = { source = "if_many", spacing = 2, prefix = "●" },
-			float = { border = "rounded", source = true },
+			virtual_text = { source = "if_many", spacing = 2, prefix = "●", max_width = 80, max_height = 20 },
+			float = { border = "rounded", source = true, wrap_at = 80 },
 			signs = true,
 			underline = true,
 			update_in_insert = false,
 			severity_sort = true,
 		})
 
-		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-		vim.lsp.handlers["textDocument/signatureHelp"] =
-			vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+		vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
+			config = config or {}
+			config.border = "rounded"
+			return vim.lsp.handlers.hover(_, result, ctx, config)
+		end
+		vim.lsp.handlers["textDocument/signatureHelp"] = function(_, result, ctx, config)
+			config = config or {}
+			config.border = "rounded"
+			return vim.lsp.handlers.signature_help(_, result, ctx, config)
+		end
 
 		local diagnostic_virtual_text = true
 		vim.keymap.set("n", "<leader>tv", function()
@@ -53,10 +60,9 @@ return {
 		-- Shared on_attach. Formatting is intentionally left to conform.nvim so one
 		-- tool owns format-on-save and LSP servers do not fight external formatters.
 		local on_attach = function(client, bufnr)
-			if client.supports_method("textDocument/inlayHint") and vim.lsp.inlay_hint then
-				pcall(vim.lsp.inlay_hint.enable, true, { bufnr = bufnr })
+			if client.server_capabilities.semanticTokensProvider then
+				client.server_capabilities.semanticTokensProvider = nil
 			end
-
 			if client.supports_method("textDocument/codeLens") then
 				local group = vim.api.nvim_create_augroup("LspCodeLens_" .. bufnr, { clear = true })
 				vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold" }, {
@@ -74,7 +80,7 @@ return {
 			callback = function(ev)
 				local opts = { buffer = ev.buf }
 				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+				-- vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 				-- feel free to add more: gd, gr, ca, <leader>ca, etc.
 			end,
 		})
@@ -250,13 +256,26 @@ return {
 
 		setup("cssls")
 		setup("somesass_ls")
-		setup("clangd")
+		setup("clangd", {
+			cmd = {
+				"clangd",
+				"--background-index",
+				"--clang-tidy",
+				"--completion-style=detailed",
+				"--header-insertion=iwyu",
+				"--function-arg-placeholders",
+			},
+			init_options = {
+				clangdFileStatus = true,
+				usePlaceholders = true,
+				completeUnimported = true,
+			},
+		})
 		setup("rust_analyzer", {
 			settings = {
 				["rust-analyzer"] = {
 					cargo = { allFeatures = true },
 					check = { command = "clippy" },
-					inlayHints = { lifetimeElisionHints = { enable = "skip_trivial" } },
 				},
 			},
 		})

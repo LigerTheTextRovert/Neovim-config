@@ -39,4 +39,4 @@ vim.opt.splitbelow = true
 vim.opt.scrolloff = 5
 vim.opt.sidescrolloff = 5
 
-vim.opt.guicursor = ""
+vim.o.winborder = "rounded"

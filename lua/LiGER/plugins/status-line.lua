@@ -5,19 +5,8 @@ return {
 		require("lualine").setup({
 			options = {
 				icons_enabled = false,
-				theme = {
-					normal = {
-						a = { bg = "none", fg = "none" },
-						b = { bg = "none", fg = "none" },
-						c = { bg = "none", fg = "none" },
-					},
-					inactive = {
-						a = { bg = "none", fg = "none" },
-						b = { bg = "none", fg = "none" },
-						c = { bg = "none", fg = "none" },
-					},
-				},
 				component_separators = {},
+				theme = "jellybeans",
 				section_separators = {},
 				disabled_filetypes = {
 					statusline = {},
@@ -29,24 +18,20 @@ return {
 				lualine_a = {
 					{
 						"mode",
-						fmt = function(str)
-							-- return str:sub(1, 1):upper() .. str:sub(2):lower()
-							return "--" .. str:upper() .. "--"
-						end,
 					},
 				},
 				lualine_b = {
 					{
 						"branch",
 						fmt = function(str)
-							return str ~= "" and "git::" .. str or ""
+							return str ~= "" and "  " .. str or ""
 						end,
 					},
 					{
 						"diagnostics",
 						sources = { "nvim_diagnostic" },
 						sections = { "error", "warn", "hint" },
-						symbols = { error = "E:", warn = "W:", hint = "H:" },
+						symbols = { error = "", warn = "", hint = "" },
 						colored = true,
 						update_in_insert = true,
 						always_visible = true,

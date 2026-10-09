@@ -3,6 +3,9 @@
 
 local M = {}
 
+-- for kanagwa
+-- { "#7E9CD8", "#FF5D62", "#FF9E3B" }
+
 -- ── Colors ────────────────────────────────────────────────────────────────────
 local colors = {
 	{ fg = "#FFD700" }, -- Yellow  (level 1)
