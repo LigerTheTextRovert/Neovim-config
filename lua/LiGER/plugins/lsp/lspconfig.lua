@@ -284,6 +284,44 @@ return {
 				workingDirectory = { mode = "auto" },
 			},
 		})
+		setup("yamlls", {
+			settings = {
+				yaml = {
+					validate = true,
+					completion = true,
+					hover = true,
+
+					schemaStore = {
+						enable = true,
+					},
+
+					schemas = {
+						-- GitHub Actions
+						["https://json.schemastore.org/github-workflow.json"] = {
+							".github/workflows/*",
+						},
+
+						-- Docker Compose
+						["https://raw.githubusercontent.com/compose-spec/compose-spec/main/schema/compose-spec.json"] = {
+							"compose.yaml",
+							"compose.yml",
+							"docker-compose.yaml",
+							"docker-compose.yml",
+						},
+
+						-- Kubernetes
+						kubernetes = {
+							"k8s/*.yaml",
+							"k8s/*.yml",
+							"kubernetes/*.yaml",
+							"kubernetes/*.yml",
+						},
+					},
+
+					kubernetesVersion = "1.36.1",
+				},
+			},
+		})
 
 		vim.lsp.enable({
 			"lua_ls",
@@ -298,6 +336,7 @@ return {
 			"clangd",
 			"rust_analyzer",
 			"eslint",
+			"yamlls",
 		})
 	end,
 }
