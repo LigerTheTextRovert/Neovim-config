@@ -8,7 +8,13 @@ return {
 		picker = {
 			enabled = true,
 			-- layout = "sidebar",
-			-- layout = "select",
+			sources = {
+				files = {
+					layout = {
+						preset = "select",
+					},
+				},
+			},
 		},
 		explorer = { enabled = true },
 	},

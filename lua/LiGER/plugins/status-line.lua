@@ -6,7 +6,7 @@ return {
 			options = {
 				icons_enabled = false,
 				component_separators = {},
-				theme = "jellybeans",
+				-- theme = "jellybeans",
 				section_separators = {},
 				disabled_filetypes = {
 					statusline = {},

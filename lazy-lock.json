@@ -9,7 +9,6 @@
   "cmp-path": { "branch": "main", "commit": "c642487086dbd9a93160e1679a1327be111cbc25" },
   "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },
   "conform.nvim": { "branch": "master", "commit": "016802de402556da54c36bd7359b441266b01cdd" },
-  "darcula-dark.nvim": { "branch": "main", "commit": "e4a407f37a2a6d7d01c66cc54a569edccad81592" },
   "friendly-snippets": { "branch": "main", "commit": "6cd7280adead7f586db6fccbd15d2cac7e2188b9" },
   "gitsigns.nvim": { "branch": "main", "commit": "5be654f2232c10ddcad19c1607a67b6b4b78fc29" },
   "indent-blankline.nvim": { "branch": "master", "commit": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03" },
@@ -34,6 +33,7 @@
   "schemastore.nvim": { "branch": "main", "commit": "73e89eb3e536a4dd8f991c963bd37189520c9919" },
   "snacks.nvim": { "branch": "main", "commit": "882c996cf28183f4d63640de0b4c02ec886d01f2" },
   "tiny-inline-diagnostic.nvim": { "branch": "main", "commit": "6264451f14119d63a52580e5198d6baf8518b0b2" },
+  "vague.nvim": { "branch": "main", "commit": "73f8aaa866bf3d14dd0b0ab9e48c11794c1cb7ab" },
   "vim-fugitive": { "branch": "master", "commit": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0" },
   "vim-tmux-navigator": { "branch": "master", "commit": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432" }
 }
