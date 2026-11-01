@@ -20,6 +20,19 @@ function RunCurrentFile()
 	elseif ext == "c" then
 		local output = vim.fn.expand("%:r")
 		cmd = string.format("gcc %s -o %s && %s", file, output, output)
+	elseif ext == "v" or ext == "sv" then
+		local output = vim.fn.expand("%:r")
+		cmd = string.format("iverilog -g2012 %s -o %s.vvp && vvp %s.vvp", file, output, output)
+	elseif ext == "vhd" or ext == "vhdl" then
+		if vim.fn.executable("ghdl") == 1 then
+			local entity_name = vim.fn.expand("%:t:r")
+			cmd = string.format("ghdl -a %s && ghdl -r %s", file, entity_name)
+		elseif vim.fn.executable("nvc") == 1 then
+			cmd = string.format("nvc -a %s", file)
+		else
+			print("No VHDL simulator found (install ghdl or nvc to run simulations)")
+			return
+		end
 	else
 		print("Unsupported file type: " .. ext)
 		return

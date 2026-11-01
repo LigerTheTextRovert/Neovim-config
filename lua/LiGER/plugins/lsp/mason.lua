@@ -23,6 +23,8 @@ return {
 				"pyright",
 				"tailwindcss",
 				"rust_analyzer",
+				"verible",
+				"vhdl_ls",
 			},
 			automatic_enable = false,
 		})
@@ -36,6 +38,7 @@ return {
 				"isort",
 				"goimports",
 				"gofumpt",
+				"vsg",
 			},
 		})
 	end,

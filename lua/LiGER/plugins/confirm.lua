@@ -21,6 +21,9 @@ return {
 				graphql = { "prettier" },
 				lua = { "stylua" },
 				python = { "isort", "black" },
+				verilog = { "verible" },
+				systemverilog = { "verible" },
+				vhdl = { "vsg" },
 			},
 			formatters = {
 				prettier = {

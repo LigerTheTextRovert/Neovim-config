@@ -9,6 +9,20 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.autoindent = true
 
+-- Ensure .v files default to verilog instead of the V language
+vim.g.filetype_v = "verilog"
+
+vim.filetype.add({
+	extension = {
+		v = "verilog",
+		vh = "verilog",
+		sv = "systemverilog",
+		svh = "systemverilog",
+		vhd = "vhdl",
+		vhdl = "vhdl",
+	},
+})
+
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "rust", "go", "c", "cpp", "py" },
 	callback = function()

@@ -63,7 +63,7 @@ return {
 			if client.server_capabilities.semanticTokensProvider then
 				client.server_capabilities.semanticTokensProvider = nil
 			end
-			if client.supports_method("textDocument/codeLens") then
+			if client:supports_method("textDocument/codeLens", bufnr) then
 				local group = vim.api.nvim_create_augroup("LspCodeLens_" .. bufnr, { clear = true })
 				vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold" }, {
 					group = group,
@@ -323,6 +323,24 @@ return {
 			},
 		})
 
+		setup("verible", {
+			filetypes = { "verilog", "systemverilog" },
+			root_dir = function(bufnr, on_dir)
+				local fname = vim.api.nvim_buf_get_name(bufnr)
+				local root = vim.fs.root(fname, { "verible.filelist", ".git" }) or vim.fs.dirname(fname)
+				on_dir(root)
+			end,
+		})
+
+		setup("vhdl_ls", {
+			filetypes = { "vhdl", "vhd" },
+			root_dir = function(bufnr, on_dir)
+				local fname = vim.api.nvim_buf_get_name(bufnr)
+				local root = vim.fs.root(fname, { "vhdl_ls.toml", ".git" }) or vim.fs.dirname(fname)
+				on_dir(root)
+			end,
+		})
+
 		vim.lsp.enable({
 			"lua_ls",
 			"vtsls",
@@ -337,6 +355,8 @@ return {
 			"rust_analyzer",
 			"eslint",
 			"yamlls",
+			"verible",
+			"vhdl_ls",
 		})
 	end,
 }

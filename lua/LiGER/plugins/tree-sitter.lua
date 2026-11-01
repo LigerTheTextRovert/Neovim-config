@@ -36,7 +36,12 @@ return {
 			"rust",
 			"sql",
 			"c",
+			"vhdl",
+			"systemverilog",
 		})
+
+		-- Map verilog filetype to systemverilog treesitter parser
+		vim.treesitter.language.register("systemverilog", "verilog")
 
 		-- Enable treesitter highlighting globally (built into Neovim 0.12+)
 		vim.api.nvim_create_autocmd("FileType", {
